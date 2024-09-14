@@ -56,10 +56,15 @@ uint8_t keypad_data = 0xFF;
 uint8_t keypad_buffer[KEYPAD_RB_LEN];
 ring_buffer_t keypad_rb;
 
-#define USART2_RB_LEN 4
+#define USART2_RB_LEN 6
 uint8_t usart2_data = 0xFF;
 uint8_t usart2_buffer[USART2_RB_LEN];
 ring_buffer_t usart2_rb;
+
+// buffer para guardas numeros por uart
+char uart_num[7];
+
+volatile int count_uart = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -86,7 +91,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		if (usart2_data >= '0' && usart2_data <= '9') {
 			ring_buffer_write(&usart2_rb, usart2_data);
 			if (ring_buffer_is_full(&keypad_rb) != 0) {
-
+        printf("Received: %c\r\n", usart2_data);
+        // verifica si el uart_num no esta lleno
+        if (count_uart < 6) {
+          uart_num[count_uart] = usart2_data;
+          count_uart++;
+        }
+        else {
+          printf("Buffer full\r\n");
+          // limpia el buffer
+          count_uart = 0;
+        }
 			}
 		}
 		HAL_UART_Receive_IT(&huart2, &usart2_data, 1);
@@ -103,10 +118,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	if (key_pressed != 0xFF) {
 		ring_buffer_write(&keypad_rb, keypad_data);
 		if (ring_buffer_is_full(&keypad_rb) != 0) {
-
+			printf("Pressed: %c\r\n", key_pressed);
 		}
 	}
 }
+
 /* USER CODE END 0 */
 
 /**
@@ -148,6 +164,9 @@ int main(void)
   ssd1306_UpdateScreen();
 
   HAL_UART_Receive_IT(&huart2, &usart2_data, 1);
+  
+  ring_buffer_init(&usart2_rb, usart2_buffer, USART2_RB_LEN); // buffer para uart
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
