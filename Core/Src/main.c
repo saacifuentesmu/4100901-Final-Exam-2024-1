@@ -69,7 +69,18 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
-
+// función para comparar si el resultado es par o impar y enceder el led
+void compare_sol(uint8_t sum)
+{
+    if (sum % 2 == 0)
+    {
+        HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+    }
+    else
+    {
+        HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+    }
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -227,6 +238,9 @@ int main(void)
                 // muestra el resultado en la pantalla
                 sprintf(display_buffer, "%d", sum);
                 Update_Display();
+                // compara si el resultado es par o impar
+                compare_sol(sum);
+                
             }
         }
     }
