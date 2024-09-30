@@ -1,32 +1,49 @@
-# 4100901-Final_Exam
-Please fork this repo, then clone it into your computer, and place your work for the Final exam here.
+# 4100901 - Examen Final - Versión Supletorio
 
-## Criterio de Evaluación 
+Sistema de operaciones aritméticas.
 
-* Funcionalidad: 60% (valor equivalente para cada requerimiento)
-* Arquitectura de codigo: 10% (uso adecuado de interrupciones y librerias)
-* Optimizaciones: 10% (de consumo de energia y tamaño de memoria)
-* Repositorio: 10% (commits entendibles que describan los cambios realizados)
-* Documentación: 10% (en código y readme del repositorio)
-
+## Criterios de Evaluación
+Funcionalidad: 60% (ponderación igual para cada requisito)
+Arquitectura de Código: 10% (uso adecuado de interrupciones y librerías)
+Optimización: 10% (consumo de energía y uso de memoria)
 
 ## Instrucciones
+Cree un nuevo proyecto utilizando STM32CubeMX e inicialice todos los periféricos de acuerdo con los requisitos a continuación.
 
-Implemente un **sistema de operaciones aritmeticas** según los requerimientos descritos a continuacion.
+## Requisitos del Sistema
+### Requisitos No Funcionales
+Indicador LED: Utilice un LED integrado para mostrar el estado del sistema.
+Teclado Hexadecimal: Implemente un teclado para la entrada de valores numéricos por parte del usuario.
+Puerto de Depuración: Configure una interfaz de comunicación con una PC utilizando USART2 a 115200 baudios.
+Pantalla OLED: Utilice una pantalla OLED para mostrar información del sistema.
 
-### Requerimientos del sistema:
+### Requisitos Funcionales
+1. Ingreso de Valores vía Teclado
+* El teclado debe aceptar dos valores separados, cada uno de hasta 3 dígitos.
+* Implemente validación de entrada para asegurar datos correctos.
 
-#### No funcionales:
-1. Tener un LED para indicar el estatus del sistema.
-2. Tener un teclado hexadecimal para ingresar un valor al sistema en dígitos.
-3. Tener un puerto de depuración con el PC (USART2 @256000 baudios).
-4. Tener un display OLED para mostrar la informacion del sistema.
+2. Selección de Operación vía USART2
+* El puerto USART2 debe recibir un carácter único que indique la operación aritmética:
+  * '+' para suma
+  * '-' para resta
+  * '*' para multiplicación
+  * '/' para división
+* Muestre la operación seleccionada en la pantalla OLED.
 
-#### Funcionales:
-5. El teclado hexadecimal debe recibir un valor de hasta 4 dígitos.
-6. El puerto USART2 debe recibir un valor de hasta 6 dígitos.
-7. Los ultimos digitos recibidos por USART2 y el keypad deben aparecer en pantalla.
-8. cuando se presione el boton azul B1 del la nucleo, se deben sumar los valores y mostrarse en la pantalla y el PC.
-9. Se debe presionar la tecla '#' para reiniciar el valor por USART2 o la tecla '*' para reiniciar el valor por el keypad.
-10. El LED se debe encender si la respuesta es par, y se debe apagar si la respuesta es impar.
+3. Mostrar Entradas
+* Muestre los dos últimos valores ingresados vía el teclado y la última operación recibida vía USART2 en la pantalla OLED.
 
+4. Realizar el Cálculo
+* Cuando se reciba el carácter '=' a través de USART2:
+  * Realice la operación aritmética seleccionada sobre los dos valores de entrada.
+  * Muestre el resultado en la pantalla OLED.
+  * Envíe el resultado a la PC vía USART2.
+
+5. Funcionalidad de Reinicio
+* Al presionar la tecla '#' en el teclado, se deben reiniciar los valores de entrada.
+* Asegure que el sistema esté listo para aceptar nuevas entradas después del reinicio.
+
+6. Indicador de Estado LED
+* El LED debe encenderse (ON) si el resultado del cálculo es positivo.
+* El LED debe apagarse (OFF) si el resultado es cero o negativo.
+  
